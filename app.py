@@ -70,7 +70,13 @@ with col2:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
-    new_state = reset_game(st.session_state.to_dict(), low=low, high=high)
+    game_state = {
+        "attempts": st.session_state.attempts,
+        "secret": st.session_state.secret,
+        "history": st.session_state.history,
+        "status": st.session_state.status,
+    }
+    new_state = reset_game(game_state, low=low, high=high)
     for key, value in new_state.items():
         st.session_state[key] = value
     st.success("New game started.")
