@@ -1,4 +1,4 @@
-from logic_utils import check_guess, reset_game
+from logic_utils import check_guess, reset_game, get_range_for_difficulty
 
 def test_winning_guess():
     # If the secret is 50 and guess is 50, it should be a win
@@ -29,6 +29,23 @@ def test_check_guess_returns_correct_hints():
     # When guess is correct, outcome should be "Win"
     outcome, message = check_guess(50, 50)
     assert outcome == "Win"
+
+
+def test_easy_range_is_smaller_than_normal():
+    # Easy should have a smaller range than Normal (easier to guess)
+    easy_low, easy_high = get_range_for_difficulty("Easy")
+    normal_low, normal_high = get_range_for_difficulty("Normal")
+    assert (easy_high - easy_low) < (normal_high - normal_low)
+
+def test_hard_range_is_larger_than_normal():
+    # Hard should have a larger range than Normal (harder to guess)
+    normal_low, normal_high = get_range_for_difficulty("Normal")
+    hard_low, hard_high = get_range_for_difficulty("Hard")
+    assert (hard_high - hard_low) > (normal_high - normal_low)
+
+def test_unknown_difficulty_falls_back_to_normal():
+    low, high = get_range_for_difficulty("Unknown")
+    assert low == 1 and high == 100
 
 
 def test_reset_game_resets_attempts():

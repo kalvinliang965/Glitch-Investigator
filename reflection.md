@@ -19,7 +19,7 @@ bug i have noticed is that
     - the hint is reverse. 
     - the new game button wont start a new game. secret changes but attempt does not get reset.
     - for my first submit, the value is not being logged.
-
+    - difficulties give bad range.
 ```
 
 ---
@@ -54,8 +54,16 @@ When i ask AI to write testcase for TDD, the compilation crashed because im impo
 i wrote actual test function to test the code and tried again on the website.
 ```
 - Describe at least one test you ran (manual or using pytest)  
+
+```
+I ask AI to write pytest for all bugs i have mentioned above.
+```
   and what it showed you about your code.
 - Did AI help you design or understand any tests? How?
+
+```
+AI help me fixing the code faster and locate the pieces of code that related to the bug. In a way, it help me debug faster.
+```
 
 ---
 
