@@ -1,3 +1,6 @@
+#FIX: Refractor logic into logic_utils.py using Claude
+import random
+
 def get_range_for_difficulty(difficulty: str):
     """Return (low, high) inclusive range for a given difficulty."""
     if difficulty == "Easy":
@@ -30,6 +33,7 @@ def parse_guess(raw: str):
         return False, None, "That is not a number."
 
     return True, value, None
+
 
 
 def check_guess(guess, secret):
@@ -71,3 +75,14 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
         return current_score - 5
 
     return current_score
+
+
+def reset_game(state: dict, low: int, high: int) -> dict:
+    """Return a new game state with attempts, history, and status reset and a fresh secret."""
+    return {
+        **state,
+        "attempts": 1,
+        "secret": random.randint(low, high),
+        "history": [],
+        "status": "playing",
+    }

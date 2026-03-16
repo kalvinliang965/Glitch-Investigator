@@ -1,4 +1,4 @@
-from logic_utils import check_guess
+from logic_utils import check_guess, reset_game
 
 def test_winning_guess():
     # If the secret is 50 and guess is 50, it should be a win
@@ -29,3 +29,34 @@ def test_check_guess_returns_correct_hints():
     # When guess is correct, outcome should be "Win"
     outcome, message = check_guess(50, 50)
     assert outcome == "Win"
+
+
+def test_reset_game_resets_attempts():
+    # After reset, attempts should be back to 1
+    state = {"attempts": 5, "secret": 42, "history": [10, 20], "status": "won"}
+    new_state = reset_game(state, low=1, high=100)
+    assert new_state["attempts"] == 1
+
+def test_reset_game_clears_history():
+    # After reset, history should be empty
+    state = {"attempts": 3, "secret": 42, "history": [10, 20, 30], "status": "lost"}
+    new_state = reset_game(state, low=1, high=100)
+    assert new_state["history"] == []
+
+def test_reset_game_resets_status():
+    # After reset, status should be "playing"
+    state = {"attempts": 3, "secret": 42, "history": [], "status": "won"}
+    new_state = reset_game(state, low=1, high=100)
+    assert new_state["status"] == "playing"
+
+def test_reset_game_changes_secret():
+    # After reset, secret should be a new number within the given range
+    state = {"attempts": 3, "secret": 42, "history": [], "status": "lost"}
+    new_state = reset_game(state, low=1, high=100)
+    assert 1 <= new_state["secret"] <= 100
+
+def test_reset_game_respects_difficulty_range():
+    # Secret should be within the difficulty range, not always 1-100
+    state = {"attempts": 3, "secret": 42, "history": [], "status": "lost"}
+    new_state = reset_game(state, low=1, high=20)
+    assert 1 <= new_state["secret"] <= 20

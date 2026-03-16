@@ -44,10 +44,6 @@ while i was asking AI to statically analyzing the bug, it correctly point out th
 When i ask AI to write testcase for TDD, the compilation crashed because im importing the util function wrong. AI didnot recognize it and believe it compiled successfully, which failed when i do it manually. The solution to this was adding __init__.py to the root directory and the `tests` directory.
 ```
 
-```
-I asked AI on specific glitch  "the hint is reverse". I pointed me the correct code that the issue is inside check_guess() and the comparator is reversed. However it mislead me to think the variable nameing is wrong and didn't actually flip the comparsion in the correction.
-
-```
 
 ---
 
