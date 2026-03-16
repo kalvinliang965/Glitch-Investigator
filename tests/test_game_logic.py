@@ -1,4 +1,4 @@
-from logic_utils import check_guess, reset_game, get_range_for_difficulty
+from logic_utils import check_guess, reset_game, get_range_for_difficulty, reset_on_difficulty_change
 
 def test_winning_guess():
     # If the secret is 50 and guess is 50, it should be a win
@@ -77,3 +77,37 @@ def test_reset_game_respects_difficulty_range():
     state = {"attempts": 3, "secret": 42, "history": [], "status": "lost"}
     new_state = reset_game(state, low=1, high=20)
     assert 1 <= new_state["secret"] <= 20
+
+
+def test_difficulty_change_resets_attempts():
+    # Switching difficulty should reset attempts back to 1
+    state = {"attempts": 5, "secret": 42, "history": [10, 20], "status": "playing", "difficulty": "Easy"}
+    new_state = reset_on_difficulty_change(state, new_difficulty="Hard")
+    assert new_state["attempts"] == 1
+
+def test_difficulty_change_clears_history():
+    # Switching difficulty should clear the guess history
+    state = {"attempts": 3, "secret": 42, "history": [10, 20, 30], "status": "playing", "difficulty": "Easy"}
+    new_state = reset_on_difficulty_change(state, new_difficulty="Hard")
+    assert new_state["history"] == []
+
+def test_difficulty_change_resets_status():
+    # Switching difficulty should reset status to "playing"
+    state = {"attempts": 3, "secret": 42, "history": [], "status": "won", "difficulty": "Normal"}
+    new_state = reset_on_difficulty_change(state, new_difficulty="Easy")
+    assert new_state["status"] == "playing"
+
+def test_difficulty_change_generates_secret_in_new_range():
+    # Secret should be within the new difficulty's range after switching
+    state = {"attempts": 3, "secret": 99, "history": [], "status": "playing", "difficulty": "Normal"}
+    new_state = reset_on_difficulty_change(state, new_difficulty="Easy")
+    low, high = get_range_for_difficulty("Easy")
+    assert low <= new_state["secret"] <= high
+
+def test_same_difficulty_does_not_reset():
+    # If difficulty hasn't changed, the state should be returned unchanged
+    state = {"attempts": 3, "secret": 42, "history": [10, 20], "status": "playing", "difficulty": "Normal"}
+    new_state = reset_on_difficulty_change(state, new_difficulty="Normal")
+    assert new_state["attempts"] == 3
+    assert new_state["history"] == [10, 20]
+    assert new_state["secret"] == 42

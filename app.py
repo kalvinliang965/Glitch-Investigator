@@ -1,6 +1,6 @@
 import random
 import streamlit as st
-from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score, reset_game
+from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score, reset_game, reset_on_difficulty_change
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -41,6 +41,20 @@ if "status" not in st.session_state:
 
 if "history" not in st.session_state:
     st.session_state.history = []
+
+if "difficulty" not in st.session_state:
+    st.session_state.difficulty = difficulty
+
+game_state = {
+    "attempts": st.session_state.attempts,
+    "secret": st.session_state.secret,
+    "history": st.session_state.history,
+    "status": st.session_state.status,
+    "difficulty": st.session_state.difficulty,
+}
+new_state = reset_on_difficulty_change(game_state, new_difficulty=difficulty)
+for key, value in new_state.items():
+    st.session_state[key] = value
 
 st.subheader("Make a guess")
 

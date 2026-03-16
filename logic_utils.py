@@ -77,6 +77,16 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
     return current_score
 
 
+def reset_on_difficulty_change(state: dict, new_difficulty: str) -> dict:
+    """Reset the game if difficulty has changed, otherwise return state unchanged."""
+    if state.get("difficulty") == new_difficulty:
+        return state
+    low, high = get_range_for_difficulty(new_difficulty)
+    new_state = reset_game(state, low=low, high=high)
+    new_state["difficulty"] = new_difficulty
+    return new_state
+
+
 def reset_game(state: dict, low: int, high: int) -> dict:
     """Return a new game state with attempts, history, and status reset and a fresh secret."""
     return {
